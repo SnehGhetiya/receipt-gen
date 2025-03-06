@@ -36,7 +36,7 @@ const CreateReceiptContextProvider: FC<Props> = ({ children }) => {
       ownerName: "",
       flatNumber: "",
       amount: 0,
-      date: new Date(),
+      date: undefined,
     },
   });
 

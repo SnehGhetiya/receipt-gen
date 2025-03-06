@@ -18,14 +18,33 @@ import {
 import { useCreateReceiptContext } from "@/context/InputFormContext";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Download, SendHorizontal } from "lucide-react";
 import { FC } from "react";
 
 const InputForm: FC = () => {
   const { form } = useCreateReceiptContext();
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log(values);
+  const onSubmit = form.handleSubmit(async (values) => {
+    const html2pdf = (await import("html2pdf.js")).default;
+    const receiptElement = document.querySelector("#receipt-preview");
+
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `${values?.ownerName}_${values?.flatNumber}_${
+        values?.date && values?.date?.getMonth() + 1
+      }.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        dpi: 192,
+        letterRendering: true,
+        backgroundColor: "#FFFFFF",
+      },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+    html2pdf(receiptElement, opt);
   });
 
   return (
@@ -138,7 +157,17 @@ const InputForm: FC = () => {
               )}
             />
           </div>
-          <Button type="submit">Submit</Button>
+          {!form?.formState?.isValid ? (
+            <Button type="submit" variant="default">
+              <SendHorizontal className="h-4 w-4" />
+              Submit
+            </Button>
+          ) : (
+            <Button type="submit" variant="default">
+              <Download className="h-4 w-4" />
+              Download PDF
+            </Button>
+          )}
         </div>
       </form>
     </Form>

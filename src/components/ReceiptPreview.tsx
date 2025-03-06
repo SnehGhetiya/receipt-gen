@@ -1,43 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateReceiptContext } from "@/context/InputFormContext";
 import { format } from "date-fns";
-import { CheckCheck, Download, IndianRupee } from "lucide-react";
+import { CheckCheck, IndianRupee } from "lucide-react";
 
 const ReceiptPreview = () => {
   const { form } = useCreateReceiptContext();
   const values = form.watch();
-
-  const handleDownloadPdf = async () => {
-    const html2pdf = (await import("html2pdf.js")).default;
-    const receiptElement = document.querySelector("#receipt-preview");
-
-    const opt = {
-      margin: [10, 10, 10, 10],
-      filename: `${values?.ownerName}_${values?.flatNumber}_${
-        values?.date?.getMonth() + 1
-      }.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        logging: true,
-        dpi: 192,
-        letterRendering: true,
-        backgroundColor: "#FFFFFF",
-      },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    };
-    html2pdf(receiptElement, opt);
-  };
 
   return (
     <div
@@ -137,22 +107,6 @@ const ReceiptPreview = () => {
             </p>
           </div>
         </CardContent>
-
-        {form.formState.isValid ? (
-          <CardFooter
-            className="border-t pt-4 flex flex-wrap gap-3 print:hidden"
-            data-html2canvas-ignore
-          >
-            <Button
-              variant="outline"
-              className="flex items-center gap-2"
-              onClick={handleDownloadPdf}
-            >
-              <Download className="h-4 w-4" />
-              Download PDF
-            </Button>
-          </CardFooter>
-        ) : null}
       </Card>
     </div>
   );
