@@ -58,7 +58,7 @@ const ReceiptPreview = () => {
               </div>
               <div className="w-full flex flex-col md:flex-row items-start md:items-center justify-between">
                 <p>
-                  <strong>Payment Date:</strong>
+                  <strong>Payment Date:</strong>{" "}
                   {values?.date
                     ? format(new Date(values.date), "PPP")
                     : "No date selected"}
